@@ -2,6 +2,7 @@ import type { Secret } from '@sanity-labs/secret-scan';
 import { ChevronsDownUp, ShieldAlert } from 'lucide-react';
 import type { RefObject } from 'react';
 import { useEffect, useState } from 'react';
+import { revealCharacter } from '@/components/mention-textarea';
 import { Button } from '@/components/ui/button';
 import {
     Dialog,
@@ -107,10 +108,18 @@ export function SecretWarning({
                                     onClick={() => {
                                         onEdit?.();
                                         requestAnimationFrame(() => {
-                                            textarea.current?.focus();
-                                            textarea.current?.setSelectionRange(
+                                            const element = textarea.current;
+
+                                            if (element === null) return;
+
+                                            element.focus();
+                                            element.setSelectionRange(
                                                 finding.start,
                                                 finding.end,
+                                            );
+                                            revealCharacter(
+                                                element,
+                                                finding.start,
                                             );
                                         });
                                     }}

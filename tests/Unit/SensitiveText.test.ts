@@ -42,3 +42,11 @@ await test('preserves ordinary code and obvious placeholder examples', () => {
         assert.equal(stashableBody(body), body);
     }
 });
+
+await test('ignores URLs and paths in prose that mentions true', () => {
+    const body =
+        'GitHub archive downloads (`api.github.com/.../zipball`) come back 403, so `composer-seed || true` runs first.';
+    assert.deepEqual(findSecrets(body), []);
+    assert.equal(removeSecrets(body), body);
+    assert.equal(stashableBody(body), body);
+});
