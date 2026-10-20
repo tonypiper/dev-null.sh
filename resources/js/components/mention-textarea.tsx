@@ -154,6 +154,27 @@ function characterRect(textarea: HTMLTextAreaElement, index: number) {
     return { top, left, bottom: top + lineHeight };
 }
 
+/**
+ * Scrolls a character of the textarea to the middle of whichever box scrolls it, since browsers don't scroll to a selection set from code.
+ */
+export function revealCharacter(textarea: HTMLTextAreaElement, index: number) {
+    const centre = (box: HTMLElement) => {
+        box.scrollTop +=
+            characterRect(textarea, index).top -
+            box.getBoundingClientRect().top -
+            box.clientHeight / 2;
+    };
+
+    centre(textarea);
+
+    // In the compose dialog the textarea grows and the box around it scrolls instead.
+    const box = textarea.parentElement;
+
+    if (box !== null && box.scrollHeight > box.clientHeight) {
+        centre(box);
+    }
+}
+
 function positionFor(textarea: HTMLTextAreaElement, index: number): Position {
     const character = characterRect(textarea, index);
     const viewport = window.visualViewport;
